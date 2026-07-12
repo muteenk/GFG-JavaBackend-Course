@@ -1,4 +1,4 @@
-package vehicles;
+package session1.vehicles;
 
 public class Car {
     // This is not real, this is just a template, an idea

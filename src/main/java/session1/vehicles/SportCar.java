@@ -1,4 +1,4 @@
-package vehicles;
+package session1.vehicles;
 
 public class SportCar extends Car {
     private final String fuel;

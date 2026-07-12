@@ -1,5 +1,7 @@
-import vehicles.Car;
-import vehicles.SportCar;
+package session1;
+
+import session1.vehicles.Car;
+import session1.vehicles.SportCar;
 
 public class Game {
     static void main() {
