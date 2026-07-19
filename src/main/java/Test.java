@@ -1,19 +1,16 @@
+import java.io.*;
 import java.util.*;
+import java.util.stream.*;
 
-public class Test {
+class ParallelStreamWithOrderedIteration {
 
-    public static void main(String args[])
+    public static void main(String[] args)
     {
-        Queue<String> pq = new PriorityQueue<>();
+        // create a list
+        List<String> list
+                = Arrays.asList("Hello ","G", "E", "E", "K", "S!");
 
-        pq.add("Geeks");
-        pq.add("For");
-        pq.add("Geeks");
-        // use Type safe Iterator
-        Iterator<String> iterator = pq.iterator();
-
-        while (iterator.hasNext()) {
-            System.out.print(iterator.next() + " ");
-        }
+        // using parallelStream() method for parallel stream
+        list.parallelStream().forEachOrdered(System.out::print);
     }
 }
