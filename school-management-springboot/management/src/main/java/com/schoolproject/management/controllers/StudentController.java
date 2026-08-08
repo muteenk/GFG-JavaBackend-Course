@@ -2,6 +2,7 @@ package com.schoolproject.management.controllers;
 
 import com.schoolproject.management.dtos.CreateStudentRequest;
 import com.schoolproject.management.entities.Student;
+import com.schoolproject.management.payload.APIResponse;
 import com.schoolproject.management.payload.EntityListResponse;
 import com.schoolproject.management.payload.EntityResponse;
 import com.schoolproject.management.services.StudentService;
@@ -11,25 +12,33 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/students")
 public class StudentController {
 
+    // /students/create -> (
+
     @Autowired
     private StudentService studentService;
 
     @PostMapping("/create")
-    public ResponseEntity<EntityResponse<Student>> createStudent(@RequestBody @Valid CreateStudentRequest studentRequest) {
+    public ResponseEntity<APIResponse<String, Student>> createStudent(@RequestBody @Valid CreateStudentRequest studentRequest) {
+        Map<String, Student> dataResponseBody = new HashMap<>();
         Student student = studentService.createStudent(studentRequest);
+        dataResponseBody.put("student", student);
+
+        int x = 10/0;
 
         HttpStatus status = HttpStatus.CREATED;
-        EntityResponse<Student> response = EntityResponse.<Student>builder()
+        APIResponse<String, Student> response = APIResponse.<String, Student>builder()
                 .message("Created Successfully")
                 .status(status)
                 .success(true)
-                .data(student)
+                .data(dataResponseBody)
                 .build();
         return new ResponseEntity<>(response, status);
     }

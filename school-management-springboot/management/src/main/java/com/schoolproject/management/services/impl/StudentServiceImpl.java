@@ -19,13 +19,20 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student createStudent(CreateStudentRequest studentRequest) {
+
+        System.out.println("Before creating a student: WE have reached here"); // point cut
+
         Student student = new Student();
         student.setName(studentRequest.name());
         student.setAge(studentRequest.age());
         student.setGrade(studentRequest.grade());
         student.setRollNumber(studentRequest.rollNumber());
 
+        // here
+
         return studentRepository.saveStudent(student);
+
+        // here
     }
 
     @Override

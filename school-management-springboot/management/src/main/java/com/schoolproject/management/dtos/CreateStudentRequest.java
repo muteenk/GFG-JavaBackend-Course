@@ -5,13 +5,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
-public record CreateStudentRequest(
+// Data transferable object
 
+public record CreateStudentRequest(
     @NotBlank
     String name,
 
     @NotNull
-    @Positive
+    @Positive(message = "age should not be less than 1")
     Integer age,
 
     @Positive
