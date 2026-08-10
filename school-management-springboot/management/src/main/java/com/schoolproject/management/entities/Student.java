@@ -7,9 +7,9 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Student {
-    private Integer id;
+    private Long id;
     private String name;
-    private Integer age;
     private Integer grade;  // the class that the student is studying in
     private Integer rollNumber;
+    private Integer age;
 }

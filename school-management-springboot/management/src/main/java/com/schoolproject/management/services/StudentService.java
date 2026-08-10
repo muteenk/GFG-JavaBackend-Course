@@ -9,4 +9,6 @@ public interface StudentService {
     Student createStudent(CreateStudentRequest studentRequest);
 
     List<Student> listStudents();
+
+    Student getOneById(Integer id);
 }

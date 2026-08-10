@@ -31,8 +31,6 @@ public class StudentController {
         Student student = studentService.createStudent(studentRequest);
         dataResponseBody.put("student", student);
 
-        int x = 10/0;
-
         HttpStatus status = HttpStatus.CREATED;
         APIResponse<String, Student> response = APIResponse.<String, Student>builder()
                 .message("Created Successfully")
@@ -50,6 +48,19 @@ public class StudentController {
         HttpStatus status = HttpStatus.OK;
         EntityListResponse<Student> response = EntityListResponse.<Student>builder()
                 .message("List fetched")
+                .status(status)
+                .success(true)
+                .data(student)
+                .build();
+        return new ResponseEntity<>(response, status);
+    }
+
+    @GetMapping("/{studentId}")
+    public ResponseEntity<EntityResponse<Student>> getStudentById(@PathVariable Integer studentId) {
+        Student student = studentService.getOneById(studentId);
+        HttpStatus status = HttpStatus.OK;
+        EntityResponse<Student> response = EntityResponse.<Student>builder()
+                .message("Student fetched successfully")
                 .status(status)
                 .success(true)
                 .data(student)
