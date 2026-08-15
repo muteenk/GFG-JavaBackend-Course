@@ -21,5 +21,17 @@ public record CreateStudentRequest(
 
     @Positive
     @NotNull
-    Integer rollNumber
+    Integer rollNumber,
+
+    @NotBlank
+    String address1,
+
+    @NotBlank
+    String city,
+
+    @NotBlank
+    String state,
+
+    @NotBlank
+    String pincode
 ) { }

@@ -10,5 +10,5 @@ public interface StudentService {
 
     List<Student> listStudents();
 
-    Student getOneById(Integer id);
+    Student getOneById(String id);
 }

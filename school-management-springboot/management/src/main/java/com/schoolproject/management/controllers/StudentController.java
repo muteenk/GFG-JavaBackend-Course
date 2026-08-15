@@ -56,7 +56,7 @@ public class StudentController {
     }
 
     @GetMapping("/{studentId}")
-    public ResponseEntity<EntityResponse<Student>> getStudentById(@PathVariable Integer studentId) {
+    public ResponseEntity<EntityResponse<Student>> getStudentById(@PathVariable String studentId) {
         Student student = studentService.getOneById(studentId);
         HttpStatus status = HttpStatus.OK;
         EntityResponse<Student> response = EntityResponse.<Student>builder()

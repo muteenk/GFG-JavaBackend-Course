@@ -3,6 +3,9 @@ package com.schoolproject.management.repositories.impl;
 import com.schoolproject.management.entities.Student;
 import com.schoolproject.management.mappers.StudentMapper;
 import com.schoolproject.management.repositories.StudentRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,41 +21,39 @@ import java.util.Map;
 
 @Repository
 public class StudentRepositoryImpl implements StudentRepository {
-    private final JdbcTemplate jdbcTemplate;
-    private StudentMapper studentMapper = new StudentMapper();
 
-    public StudentRepositoryImpl(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
-    public Student saveStudent(Student student) {
-        String sql = """
-                INSERT INTO student(name, grade, roll_no, age) VALUES(?, ?, ?, ?);
-                """;
-        jdbcTemplate.update(
-                sql,
-                student.getName(),
-                student.getGrade(),
-                student.getRollNumber(),
-                student.getAge()
-        );
+    public Student save(Student student) {
+        entityManager.persist(student);
         return student;
     }
 
-    @Override
+//    @Override
     public List<Student> findAll() {
-        String sql = """
-                SELECT * FROM student LIMIT 50;
-                """;
-        return jdbcTemplate.query(sql, studentMapper);
+        String jpql = "SELECT u FROM student u";
+        TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
+        return query.getResultList();
+    }
+
+
+    @Override
+    public Student findById(String id) {
+        return entityManager.find(Student.class, id);
     }
 
     @Override
-    public Student findById(Integer id) {
-        String sql = """
-                SELECT * FROM student WHERE id = ?;
-                """;
-        return jdbcTemplate.queryForObject(sql, studentMapper, id);
+    public Student updateStudent(Student student, String id) {
+        Student student1 = this.findById(id);
+        student1.setName(student.getName());
+        student1.setGrade(student.getGrade());
+        return student1;
+    }
+
+    @Override
+    public void deleteStudent(Student student) {
+        entityManager.remove(student);
     }
 }

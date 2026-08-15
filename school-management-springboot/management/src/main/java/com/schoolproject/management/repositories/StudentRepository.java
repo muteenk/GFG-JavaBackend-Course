@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface StudentRepository {
-    Student saveStudent(Student student);
+    Student save(Student student);
     List<Student> findAll();
-    Student findById(Integer id);
+    Student findById(String id);
+    Student updateStudent(Student student, String id);
+    void deleteStudent(Student id);
 }

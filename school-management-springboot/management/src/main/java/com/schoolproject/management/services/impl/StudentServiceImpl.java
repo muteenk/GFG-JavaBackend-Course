@@ -1,9 +1,12 @@
 package com.schoolproject.management.services.impl;
 
 import com.schoolproject.management.dtos.CreateStudentRequest;
+import com.schoolproject.management.entities.Address;
 import com.schoolproject.management.entities.Student;
+import com.schoolproject.management.repositories.StudentJPARepo;
 import com.schoolproject.management.repositories.StudentRepository;
 import com.schoolproject.management.services.StudentService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,23 +19,25 @@ public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
+//    private StudentJPARepo studentRepository;
 
     @Override
+    @Transactional
     public Student createStudent(CreateStudentRequest studentRequest) {
-
-        System.out.println("Before creating a student: WE have reached here"); // point cut
-
         Student student = new Student();
         student.setName(studentRequest.name());
         student.setAge(studentRequest.age());
         student.setGrade(studentRequest.grade());
         student.setRollNumber(studentRequest.rollNumber());
-
-        // here
-
-        return studentRepository.saveStudent(student);
-
-        // here
+//        Address address = new Address(
+//                studentRequest.address1(),
+//                "",
+//                studentRequest.state(),
+//                studentRequest.city(),
+//                studentRequest.pincode()
+//        );
+//        student.setCurrentAddress(address);
+        return studentRepository.save(student);
     }
 
     @Override
@@ -41,7 +46,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student getOneById(Integer id) {
+    public Student getOneById(String  id) {
         return studentRepository.findById(id);
     }
 }
