@@ -1,6 +1,8 @@
 package com.splitwise.splitwise.controllers;
 
-import com.splitwise.splitwise.dtos.*;
+import com.splitwise.splitwise.dtos.request.UserLoginRequest;
+import com.splitwise.splitwise.dtos.request.UserSignupRequest;
+import com.splitwise.splitwise.dtos.response.CommonUserResponse;
 import com.splitwise.splitwise.entites.User;
 import com.splitwise.splitwise.payloads.ApiResponse;
 import com.splitwise.splitwise.services.UserService;

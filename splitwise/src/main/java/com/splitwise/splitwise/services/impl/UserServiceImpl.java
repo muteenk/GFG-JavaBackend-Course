@@ -1,7 +1,7 @@
 package com.splitwise.splitwise.services.impl;
 
-import com.splitwise.splitwise.dtos.UserLoginRequest;
-import com.splitwise.splitwise.dtos.UserSignupRequest;
+import com.splitwise.splitwise.dtos.request.UserLoginRequest;
+import com.splitwise.splitwise.dtos.request.UserSignupRequest;
 import com.splitwise.splitwise.entites.User;
 import com.splitwise.splitwise.exceptions.InvalidCredentialsException;
 import com.splitwise.splitwise.exceptions.ResourceExistsException;
