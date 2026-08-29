@@ -33,7 +33,7 @@ public class StudentRepositoryImpl implements StudentRepository {
 
 //    @Override
     public List<Student> findAll() {
-        String jpql = "SELECT u FROM student u";
+        String jpql = "SELECT u FROM Student u";
         TypedQuery<Student> query = entityManager.createQuery(jpql, Student.class);
         return query.getResultList();
     }

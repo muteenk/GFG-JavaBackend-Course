@@ -20,8 +20,6 @@ import java.util.Map;
 @RequestMapping("/students")
 public class StudentController {
 
-    // /students/create -> (
-
     @Autowired
     private StudentService studentService;
 
