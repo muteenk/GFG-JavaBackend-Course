@@ -2,6 +2,7 @@ package com.schoolproject.management.controllers;
 
 import com.schoolproject.management.dtos.CreateStudentRequest;
 import com.schoolproject.management.entities.Student;
+import com.schoolproject.management.entities.StudentRole;
 import com.schoolproject.management.payload.APIResponse;
 import com.schoolproject.management.payload.EntityListResponse;
 import com.schoolproject.management.payload.EntityResponse;
@@ -10,6 +11,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -40,6 +43,7 @@ public class StudentController {
     }
 
     @GetMapping("/list")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EntityListResponse<Student>> listStudent() {
         List<Student> student = studentService.listStudents();
 
@@ -66,4 +70,8 @@ public class StudentController {
         return new ResponseEntity<>(response, status);
     }
 
+    @GetMapping("/csrf-token")
+    public ResponseEntity<CsrfToken> getCsrfToken(CsrfToken token) {
+        return ResponseEntity.ok(token);
+    }
 }
