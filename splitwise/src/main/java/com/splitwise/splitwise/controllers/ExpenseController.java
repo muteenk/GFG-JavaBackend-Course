@@ -17,6 +17,8 @@ import com.splitwise.splitwise.services.ExpenseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/v1/expenses")
 @RequiredArgsConstructor
@@ -26,11 +28,11 @@ public class ExpenseController {
 
     @PostMapping("/{groupId}/create")
     public ResponseEntity<ApiResponse<CreateExpenseResponse>> createExpense(
-        @RequestHeader("X-User-Id") String userId,
         @PathVariable String groupId,
-        @RequestBody @Valid CreateExpenseRequest createExpenseRequest
+        @RequestBody @Valid CreateExpenseRequest createExpenseRequest,
+        Principal principal
     ) {
-        Expense expense = expenseService.createExpense(userId, groupId, createExpenseRequest);
+        Expense expense = expenseService.createExpense(principal.getName(), groupId, createExpenseRequest);
         CreateExpenseResponse createExpenseResponse = new CreateExpenseResponse(
             expense.getId(),
             expense.getDescription(),

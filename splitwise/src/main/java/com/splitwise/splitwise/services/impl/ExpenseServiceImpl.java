@@ -1,6 +1,7 @@
 package com.splitwise.splitwise.services.impl;
 
 import com.splitwise.splitwise.entites.ExpenseSplit;
+import com.splitwise.splitwise.services.utility.RedisService;
 import com.splitwise.splitwise.utilities.ExpenseUtility;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
     private final GroupRepository groupRepository;
+    private final RedisService redisService;
 
     @Override
     @Transactional
@@ -53,6 +55,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
         expenseRepository.save(expense);
         splitAmountEqually(expense, group, amount);
+        redisService.remove("user-group-summary:" + userId);
         return expense;
     }
 

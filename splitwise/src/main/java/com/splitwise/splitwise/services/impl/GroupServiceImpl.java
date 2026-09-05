@@ -2,19 +2,23 @@ package com.splitwise.splitwise.services.impl;
 
 import com.splitwise.splitwise.dtos.request.AddMembersRequest;
 import com.splitwise.splitwise.dtos.request.CreateGroupRequest;
+import com.splitwise.splitwise.dtos.response.GroupSummaryResponse;
 import com.splitwise.splitwise.entites.SplitGroup;
 import com.splitwise.splitwise.entites.User;
 import com.splitwise.splitwise.exceptions.ResourceDoesNotExist;
-import com.splitwise.splitwise.exceptions.ResourceExistsException;
 import com.splitwise.splitwise.repositories.ExpenseRepository;
 import com.splitwise.splitwise.repositories.GroupRepository;
 import com.splitwise.splitwise.repositories.UserRepository;
-import com.splitwise.splitwise.repositories.projections.GroupSummaryProjection;
 import com.splitwise.splitwise.services.GroupService;
+import com.splitwise.splitwise.services.utility.RedisService;
+import com.splitwise.splitwise.utilities.ExpenseUtility;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import tools.jackson.core.type.TypeReference;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +29,7 @@ public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
+    private final RedisService redisService;
 
     @Override
     @Transactional
@@ -44,14 +49,37 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<GroupSummaryProjection> getGroupsSummaryForUser(String userId) {
-        
-        User _ = userRepository.findById(userId)
-                .orElseThrow(() ->
-                        new ResourceDoesNotExist("User with id: '" + userId + "', not found !")
-                );
+    public List<GroupSummaryResponse> getGroupsSummaryForUser(String userId) {
+        String cacheKey = "user-group-summary:" + userId;
 
-        return expenseRepository.getGroupsSummaryForUser(userId);
+        List<GroupSummaryResponse> cached = redisService.get(
+                cacheKey,
+                new TypeReference<List<GroupSummaryResponse>>() {}
+        );
+        if (cached != null) {
+            return cached;
+        }
+
+        List<GroupSummaryResponse> summary = expenseRepository.getGroupsSummaryForUser(userId).stream()
+                .map(projection -> {
+                    BigInteger totalPaid = projection.getTotalPaid();
+                    BigInteger totalOwed = projection.getTotalOwed();
+                    BigInteger totalBalance = totalOwed.subtract(totalPaid);
+                    String balanceType = totalBalance.compareTo(BigInteger.ZERO) > 0 ? "Owed" : "Paid";
+                    BigDecimal balanceInRupees = ExpenseUtility.covertToRupees(totalBalance);
+
+                    return new GroupSummaryResponse(
+                            projection.getGroupId(),
+                            projection.getGroupName(),
+                            projection.getGroupDescription(),
+                            balanceInRupees,
+                            balanceType
+                    );
+                })
+                .toList();
+
+        redisService.set(cacheKey, summary, 600L);
+        return summary;
     }
 
     @Override
